@@ -1,25 +1,26 @@
 {
 	"schema_version": 1,
 	"quilt_loader": {
-		"group": "com.example",
-		"id": "example_mod",
+		"group": "me.wawwior",
+		"id": "keybind_profiles",
 		"version": "${version}",
 		"metadata": {
-			"name": "Mod Name",
-			"description": "A short description of your mod.",
+			"name": "Keybind Profiles",
+			"description": "Keybind Profiles is a mod that allows you to create and switch between keybind profiles.",
 			"contributors": {
-				"Your name here": "Owner"
+				"Wawwior": ["Owner", "Author"]
 			},
 			"contact": {
-				"homepage": "https://example.com/",
-				"issues": "https://github.com/QuiltMC/quilt-template-mod/issues",
-				"sources": "https://github.com/QuiltMC/quilt-template-mod"
+				"homepage": "https://wawwior.me/keybind-profiles",
+				"issues": "https://github.com/Wawwior/keybind-profiles/issues",
+				"sources": "https://github.com/Wawwior/keybind-profiles"
 			},
-			"icon": "assets/example_mod/icon.png"
+			"icon": "assets/keybind_profiles/icon.png",
+			"license": "MIT"
 		},
 		"intermediate_mappings": "net.fabricmc:intermediary",
 		"entrypoints": {
-			"init": "com.example.example_mod.ExampleMod"
+			"client_init": "me.wawwior.keybind_profiles.KeybindProfiles"
 		},
 		"depends": [
 			{
@@ -36,5 +37,8 @@
 			}
 		]
 	},
-	"mixin": "example_mod.mixins.json"
+	"mixin": "keybind_profiles.mixins.json",
+	"minecraft": {
+		"environment": "client"
+	}
 }
