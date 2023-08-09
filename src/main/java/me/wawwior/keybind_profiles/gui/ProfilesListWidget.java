@@ -1,6 +1,5 @@
 package me.wawwior.keybind_profiles.gui;
 
-import com.mojang.blaze3d.platform.InputUtil;
 import me.wawwior.keybind_profiles.KeybindProfiles;
 import me.wawwior.keybind_profiles.config.Profile;
 import me.wawwior.keybind_profiles.util.KeybindUtil;
@@ -8,7 +7,6 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.widget.AlwaysSelectedEntryListWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
-import net.minecraft.client.option.GameOptions;
 import net.minecraft.text.Text;
 import net.minecraft.util.Util;
 import org.quiltmc.loader.api.minecraft.ClientOnly;
@@ -18,9 +16,9 @@ import java.util.*;
 @ClientOnly
 public class ProfilesListWidget extends AlwaysSelectedEntryListWidget<ProfilesListWidget.ProfileListEntry> {
 
-	final KeybindProfilesScreen parent;
+	final ProfilesScreen parent;
 
-	public ProfilesListWidget(KeybindProfilesScreen parent, MinecraftClient client) {
+	public ProfilesListWidget(ProfilesScreen parent, MinecraftClient client) {
 		super(client, parent.width, parent.height, 20, parent.height - 64, 20);
 		this.parent = parent;
 		update();
@@ -28,14 +26,14 @@ public class ProfilesListWidget extends AlwaysSelectedEntryListWidget<ProfilesLi
 
 	public void update() {
 		clearEntries();
-		Arrays.stream(KeybindProfiles.config.getProfiles()).sorted(Comparator.comparing(Profile::getId)).forEach(profile -> addEntry(new ProfileListEntry(profile)));
+		Arrays.stream(KeybindProfiles.config.getProfiles()).forEach(profile -> addEntry(new ProfileListEntry(profile)));
 		for (ProfileListEntry entry : this.children()) {
 			entry.update();
 		}
 	}
 
-	public void closed() {
-		Objects.requireNonNull(getSelectedOrNull()).closed();
+	public void setSelectedProfile(Profile profile) {
+		this.setSelected(this.children().stream().filter(entry -> entry.getKeybindProfile().equals(profile)).findFirst().orElse(null));
 	}
 
 	@ClientOnly
@@ -43,16 +41,11 @@ public class ProfilesListWidget extends AlwaysSelectedEntryListWidget<ProfilesLi
 
 		private final Profile keybindProfile;
 
-		private final TextFieldWidget nameField;
-
 		private long time;
 
 		public ProfileListEntry(Profile keybindProfile) {
 			this.keybindProfile = keybindProfile;
-			nameField = new TextFieldWidget(ProfilesListWidget.this.client.textRenderer, 0, 0, 200, 16, Text.of(""));
-			nameField.setText(keybindProfile.getName());
 		}
-
 
 		void update() {
 
@@ -82,19 +75,10 @@ public class ProfilesListWidget extends AlwaysSelectedEntryListWidget<ProfilesLi
 			this.keybindProfile.load();
 		}
 
-		public void closed() {
-			keybindProfile.save();
-			KeybindUtil.applyTemporaryKeybinds();
-			keybindProfile.setName(nameField.getText());
-		}
-
 		public Profile getKeybindProfile() {
 			return keybindProfile;
 		}
 
-		public TextFieldWidget getNameField() {
-			return nameField;
-		}
 	}
 
 }

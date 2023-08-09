@@ -1,11 +1,10 @@
 package me.wawwior.keybind_profiles.mixin;
 
-import me.wawwior.keybind_profiles.gui.KeybindProfilesScreen;
+import me.wawwior.keybind_profiles.gui.ProfileEditScreen;
+import me.wawwior.keybind_profiles.gui.ProfilesScreen;
+import me.wawwior.keybind_profiles.util.KeybindUtil;
 import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.gui.Drawable;
-import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.Selectable;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.option.GameOptionsScreen;
 import net.minecraft.client.gui.screen.option.KeyBindsScreen;
@@ -14,6 +13,7 @@ import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.gui.widget.TexturedButtonWidget;
 import net.minecraft.client.option.GameOptions;
 import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import org.quiltmc.loader.api.minecraft.ClientOnly;
 import org.spongepowered.asm.mixin.Mixin;
@@ -29,63 +29,36 @@ import java.util.Objects;
 @Mixin(KeyBindsScreen.class)
 public class KeybindsScreenMixin extends GameOptionsScreen {
 
-	@Shadow private ButtonWidget resetAllButton;
-
 	public KeybindsScreenMixin(Screen parent, GameOptions gameOptions, Text title) {
 		super(parent, gameOptions, title);
 	}
 
 	@Inject(method = "init", at = @At("TAIL"))
 	protected void init$addButton(CallbackInfo ci) {
-		if (this.parent instanceof KeybindProfilesScreen p) {
-			TextFieldWidget nameField = p.getProfilesListWidget().getSelectedOrNull().getNameField();
-			nameField.setPosition(this.width / 2 - 100, 2);
-			this.addDrawableChild(nameField);
-		} else {
-			this.addDrawableChild(new TexturedButtonWidget(
-					this.width / 2 - 155 + 150 + 170,
-					this.height - 29,
-					20,
-					20,
-					0,
-					0,
-					20,
-					new Identifier("keybind_profiles", "textures/gui/buttons.png"),
-					20,
-					40,
-					buttonWidget -> Objects.requireNonNull(this.client).setScreen(new KeybindProfilesScreen(this, gameOptions))
-			));
-		}
-	}
-
-	@Redirect(
-			method = "init",
-			at = @At(
-					value = "INVOKE",
-					target = "Lnet/minecraft/client/gui/screen/option/KeyBindsScreen;addDrawableChild(Lnet/minecraft/client/gui/Element;)Lnet/minecraft/client/gui/Element;",
-					ordinal = 0
-			)
-	)
-	protected <T extends Element & Drawable & Selectable> Element init$addDrawableChild(KeyBindsScreen keyBindsScreen, Element element) {
-		if (!(this.parent instanceof KeybindProfilesScreen)) {
-			//noinspection unchecked
-			return this.addDrawableChild((T)element);
-
-		} else {
-			this.addDrawableChild(ButtonWidget.builder(Text.translatable("keybind_profiles.screen.more"), buttonWidget -> {
-				//TODO: More Options
-			}).positionAndSize(this.width / 2 - 155, this.height - 29, 150, 20).build());
-			return element;
-		}
-	}
+        if (!(this.parent instanceof ProfileEditScreen)) {
+            this.addDrawableChild(new TexturedButtonWidget(
+                    this.width / 2 - 155 + 150 + 170,
+                    this.height - 29,
+                    20,
+                    20,
+                    0,
+                    0,
+                    20,
+                    new Identifier("keybind_profiles", "textures/gui/buttons.png"),
+                    20,
+                    40,
+                    buttonWidget -> Objects.requireNonNull(this.client).setScreen(new ProfilesScreen(this, gameOptions))
+            ));
+        }
+    }
 
 	@Override
 	public void removed() {
-		if (this.parent instanceof KeybindProfilesScreen p) {
-			p.getProfilesListWidget().closed();
-			return;
-		};
-		super.removed();
+		if (this.parent instanceof ProfileEditScreen) {
+			KeybindUtil.applyTemporaryKeybinds();
+		} else {
+			super.removed();
+		}
 	}
 
 	@Redirect(
@@ -97,8 +70,9 @@ public class KeybindsScreenMixin extends GameOptionsScreen {
 			)
 	)
 	protected void render$drawCenteredShadowedText(GuiGraphics graphics, TextRenderer textRenderer, Text text, int x, int y, int color) {
-		if (!(this.parent instanceof KeybindProfilesScreen)) {
-			graphics.drawCenteredShadowedText(textRenderer, text, x, y, color);
+		if (this.parent instanceof ProfileEditScreen p) {
+			text = Text.translatable("keybind_profiles.screen.title.edit").append(Text.literal(p.getProfile().getName()).formatted(Formatting.YELLOW));
 		}
+		graphics.drawCenteredShadowedText(textRenderer, text, x, y, color);
 	}
 }

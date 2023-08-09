@@ -1,14 +1,8 @@
 package me.wawwior.keybind_profiles.config;
 
-import com.mojang.blaze3d.platform.InputUtil;
-import me.wawwior.keybind_profiles.compat.AmecsCompat;
-import me.wawwior.keybind_profiles.gui.ScreenManager;
 import me.wawwior.keybind_profiles.util.KeybindUtil;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.option.GameOptions;
 
 import java.util.HashMap;
-import java.util.Optional;
 import java.util.UUID;
 
 public class Profile {

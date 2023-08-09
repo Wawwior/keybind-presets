@@ -6,7 +6,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.option.KeyBindsScreen;
 
-public class ScreenManager {
+public class GuiUtil {
 
 	public static void openKeybindScreen(Profile profile, Screen parent) {
 		KeybindUtil.updateTemporaryKeybinds();
