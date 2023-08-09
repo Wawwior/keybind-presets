@@ -34,6 +34,11 @@
 			{
 				"id": "minecraft",
 				"versions": ">=1.20"
+			},
+			{
+				"id": "amecs",
+				"versions": ">=1.3.9",
+				"optional": true
 			}
 		]
 	},
