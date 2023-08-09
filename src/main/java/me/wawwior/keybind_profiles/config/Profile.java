@@ -1,15 +1,14 @@
 package me.wawwior.keybind_profiles.config;
 
 import me.wawwior.keybind_profiles.util.KeybindUtil;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
-import java.util.UUID;
 
 public class Profile {
 
+    @NotNull
     private final HashMap<String, KeybindEntry> keyBinds = new HashMap<>();
-
-    private final UUID id = UUID.randomUUID();
 
     private String name;
 
@@ -17,7 +16,7 @@ public class Profile {
         this.name = name;
     }
 
-    public HashMap<String, KeybindEntry> getKeyBinds() {
+    public @NotNull HashMap<String, KeybindEntry> getKeyBinds() {
         return keyBinds;
     }
 
@@ -27,10 +26,6 @@ public class Profile {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public UUID getId() {
-        return id;
     }
 
 	public void load() {

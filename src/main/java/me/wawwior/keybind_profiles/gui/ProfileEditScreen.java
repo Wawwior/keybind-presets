@@ -1,10 +1,13 @@
 package me.wawwior.keybind_profiles.gui;
 
+import me.wawwior.keybind_profiles.KeybindProfiles;
 import me.wawwior.keybind_profiles.config.Profile;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screen.NavigationAxis;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ScreenArea;
+import net.minecraft.client.gui.tooltip.FocusedTooltipPositioner;
+import net.minecraft.client.gui.tooltip.Tooltip;
 import net.minecraft.client.gui.widget.*;
 import net.minecraft.client.gui.widget.container.LayoutSettings;
 import net.minecraft.text.CommonTexts;
@@ -16,6 +19,9 @@ public class ProfileEditScreen extends Screen {
 	private final Profile profile;
 
 	private TextFieldWidget nameField;
+
+	ButtonWidget doneButton;
+	private ButtonWidget moreButton;
 
 	protected ProfileEditScreen(ProfilesScreen parent, Profile profile) {
 		super(Text.of("Edit Profile"));
@@ -31,17 +37,17 @@ public class ProfileEditScreen extends Screen {
 		);
 
 		nameField.setText(profile.getName());
+		nameField.setTooltip(Tooltip.create(Text.translatable("keybind_profiles.screen.tooltip.name")));
+		nameField.setTooltipDelay(500);
 
-		ButtonWidget doneButton = this.addDrawableChild(
+		doneButton = this.addDrawableChild(
 				ButtonWidget.builder(CommonTexts.DONE, button -> closeScreen())
 						.width(100)
 						.build()
 		);
 
-		ButtonWidget moreButton = this.addDrawableChild(
-				ButtonWidget.builder(Text.translatable("keybind_profiles.screen.button.more"), button -> {
-							GuiUtil.openKeybindScreen(profile, this);
-						})
+		moreButton = this.addDrawableChild(
+				ButtonWidget.builder(Text.translatable("keybind_profiles.screen.button.more"), button -> GuiUtil.openKeybindScreen(profile, this))
 						.width(100)
 						.build()
 		);
@@ -77,6 +83,27 @@ public class ProfileEditScreen extends Screen {
 		graphics.drawCenteredShadowedText(textRenderer, title, width / 2, 8, 16777215);
 
 		super.render(graphics, mouseX, mouseY, delta);
+
+		if (
+				nameField.getText().trim().isEmpty() ||
+				(
+					!nameField.getText().trim().equalsIgnoreCase(profile.getName().trim()) &&
+					KeybindProfiles.getConfig().getProfile(nameField.getText()) != null
+				)
+		) {
+			nameField.setEditableColor(16733525);
+			if (!nameField.getText().trim().isEmpty()) {
+				setDeferredTooltip(Tooltip.create(Text.translatable("keybind_profiles.screen.tooltip.name_taken")), new FocusedTooltipPositioner(nameField), true);
+			} else {
+				setDeferredTooltip(Tooltip.create(Text.translatable("keybind_profiles.screen.tooltip.name_empty")), new FocusedTooltipPositioner(nameField), true);
+			}
+			doneButton.active = false;
+			moreButton.active = false;
+		} else {
+			nameField.setEditableColor(14737632);
+			doneButton.active = true;
+			moreButton.active = true;
+		}
 	}
 
 	@Override
@@ -85,7 +112,7 @@ public class ProfileEditScreen extends Screen {
 			this.client.setScreen(parent);
 		}
 		profile.save();
-		profile.setName(nameField.getText());
+		profile.setName(nameField.getText().trim());
 	}
 
 	public Profile getProfile() {

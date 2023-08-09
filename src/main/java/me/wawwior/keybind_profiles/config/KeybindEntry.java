@@ -3,25 +3,12 @@ import com.google.gson.*;
 import com.mojang.blaze3d.platform.InputUtil;
 import me.wawwior.config.ConfigProvider;
 
-import java.lang.reflect.Type;
-
 
 public class KeybindEntry {
 
 	private final String key;
 
 	private final Modifiers modifiers = new Modifiers();
-
-	public KeybindEntry(String key) {
-		this(key, false, false, false);
-	}
-
-	public KeybindEntry(String key, boolean shift, boolean ctrl, boolean alt) {
-		this.key = key;
-		modifiers.SHIFT = shift;
-		modifiers.CTRL = ctrl;
-		modifiers.ALT = alt;
-	}
 
 	public KeybindEntry(String key, Modifiers modifiers) {
 		this.key = key;
@@ -38,15 +25,14 @@ public class KeybindEntry {
 		return modifiers;
 	}
 
-
 	public static class Modifiers {
 
 		public boolean SHIFT = false;
 		public boolean CTRL = false;
 		public boolean ALT = false;
 
-		public static class Serializer extends ConfigProvider.JsonAdapterPair<Modifiers> {
-			public Serializer() {
+		public static class Codec extends ConfigProvider.JsonAdapterPair<Modifiers> {
+			public Codec() {
 				super(
                         (src, typeOfSrc, context) -> {
 							int shift = 0;

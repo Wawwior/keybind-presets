@@ -1,10 +1,20 @@
 {
+  "GUI": "",
+
   "keybind_profiles.screen.title": "Keybind Profiles",
   "keybind_profiles.screen.title.edit": "Editing Profile: ",
   "keybind_profiles.screen.button.more": "More...",
   "keybind_profiles.screen.button.create": "Create New...",
   "keybind_profiles.screen.button.delete": "Delete",
   "keybind_profiles.screen.button.load": "Load",
-  "keybind_profiles.screen.button.edit": "Edit"
+  "keybind_profiles.screen.button.edit": "Edit",
+
+  "keybind_profiles.screen.tooltip.name": "Name",
+  "keybind_profiles.screen.tooltip.name_empty": "Name cannot be empty",
+  "keybind_profiles.screen.tooltip.name_taken": "Name is already taken",
+
+  "COMMANDS": "",
+
+  "keybind_profiles.command.keybind.load.success": "Loaded keybind profile: {0}"
 }
 

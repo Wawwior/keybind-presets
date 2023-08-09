@@ -55,9 +55,20 @@ public class ProfilesScreen extends GameOptionsScreen {
 
 		ButtonWidget createButton = this.addDrawableChild(
 				ButtonWidget.builder(Text.translatable("keybind_profiles.screen.button.create"), button -> {
-							Profile profile = KeybindProfiles.config.newProfile("New Profile");
+							String name = "New Profile";
+
+							if (KeybindProfiles.getConfig().getProfile(name) != null) {
+								int i = 2;
+								while (KeybindProfiles.getConfig().getProfile(name + " #" + i) != null) {
+									i++;
+								}
+								name = name + " #" + i;
+							}
+
+							Profile profile = KeybindProfiles.getConfig().newProfile(name);
 							KeybindUtil.storeKeybinds(profile.getKeyBinds());
 							profilesListWidget.update();
+							profilesListWidget.setSelectedProfile(selectedProfile);
 				})
 						.width(152)
 						.build()
@@ -66,7 +77,7 @@ public class ProfilesScreen extends GameOptionsScreen {
 		deleteButton = this.addDrawableChild(
 				ButtonWidget.builder(Text.translatable("keybind_profiles.screen.button.delete"), button -> {
 					if (selectedProfile != null) {
-						KeybindProfiles.config.deleteProfile(selectedProfile);
+						KeybindProfiles.getConfig().deleteProfile(selectedProfile);
 						profilesListWidget.update();
 					}
 				})
@@ -116,7 +127,7 @@ public class ProfilesScreen extends GameOptionsScreen {
 	public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
 
 		this.renderBackground(graphics);
-		graphics.drawCenteredShadowedText(this.textRenderer, this.title, this.width / 2, 8, 16777215);;
+		graphics.drawCenteredShadowedText(this.textRenderer, this.title, this.width / 2, 8, 16777215);
 
 		selectedProfile = Optional.ofNullable(profilesListWidget.getSelectedOrNull()).map(ProfilesListWidget.ProfileListEntry::getKeybindProfile).orElse(null);
 
