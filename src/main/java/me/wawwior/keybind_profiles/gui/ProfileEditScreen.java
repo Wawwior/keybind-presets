@@ -111,7 +111,10 @@ public class ProfileEditScreen extends Screen {
 		if (this.client != null) {
 			this.client.setScreen(parent);
 		}
-		profile.save();
+	}
+
+	@Override
+	public void removed() {
 		profile.setName(nameField.getText().trim());
 	}
 

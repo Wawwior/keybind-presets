@@ -62,6 +62,14 @@ public class KeybindEntry {
 			}
 		}
 
+		@Override
+		public String toString() {
+			return "Modifiers{" +
+				"SHIFT=" + SHIFT +
+				", CTRL=" + CTRL +
+				", ALT=" + ALT +
+				'}';
+		}
 	}
 
 }

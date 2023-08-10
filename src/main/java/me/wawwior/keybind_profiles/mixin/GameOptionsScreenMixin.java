@@ -24,7 +24,8 @@ public class GameOptionsScreenMixin {
             )
     )
     public void write$applyKeybinds(GameOptions instance) {
-        if (this.parent instanceof ProfileEditScreen) {
+        if (this.parent instanceof ProfileEditScreen p) {
+			p.getProfile().save();
             KeybindUtil.applyTemporaryKeybinds();
         }
     }

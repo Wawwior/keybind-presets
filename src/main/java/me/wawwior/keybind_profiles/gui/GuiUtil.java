@@ -10,7 +10,7 @@ public class GuiUtil {
 
 	public static void openKeybindScreen(Profile profile, Screen parent) {
 		KeybindUtil.updateTemporaryKeybinds();
-		KeybindUtil.loadKeybinds(profile.getKeyBinds());
+		profile.load();
 		MinecraftClient.getInstance().setScreen(new KeyBindsScreen(parent, MinecraftClient.getInstance().options));
 	}
 

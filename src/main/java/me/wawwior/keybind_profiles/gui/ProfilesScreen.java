@@ -2,7 +2,6 @@ package me.wawwior.keybind_profiles.gui;
 
 import me.wawwior.keybind_profiles.KeybindProfiles;
 import me.wawwior.keybind_profiles.config.Profile;
-import me.wawwior.keybind_profiles.util.KeybindUtil;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screen.NavigationAxis;
 import net.minecraft.client.gui.screen.Screen;
@@ -66,7 +65,7 @@ public class ProfilesScreen extends GameOptionsScreen {
 							}
 
 							Profile profile = KeybindProfiles.getConfig().newProfile(name);
-							KeybindUtil.storeKeybinds(profile.getKeyBinds());
+							profile.save();
 							profilesListWidget.update();
 							profilesListWidget.setSelectedProfile(selectedProfile);
 				})

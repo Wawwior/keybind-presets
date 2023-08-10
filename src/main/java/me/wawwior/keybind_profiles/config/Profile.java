@@ -16,9 +16,6 @@ public class Profile {
         this.name = name;
     }
 
-    public @NotNull HashMap<String, KeybindEntry> getKeyBinds() {
-        return keyBinds;
-    }
 
     public String getName() {
         return name;
@@ -30,7 +27,6 @@ public class Profile {
 
 	public void load() {
 		KeybindUtil.loadKeybinds(keyBinds);
-		KeybindUtil.updateTemporaryKeybinds();
 	}
 
 	public void save() {

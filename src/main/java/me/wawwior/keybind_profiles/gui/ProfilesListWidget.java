@@ -80,14 +80,10 @@ public class ProfilesListWidget extends AlwaysSelectedEntryListWidget<ProfilesLi
 			if (Util.getMeasuringTimeMs() - this.time < 250L) {
 				lastLoadedProfile = keybindProfile;
 				client.getSoundManager().play(PositionedSoundInstance.create(SoundEvents.UI_BUTTON_CLICK, 1.0F));
-				this.load();
+				this.keybindProfile.load();
 			}
 			this.time = Util.getMeasuringTimeMs();
 			return true;
-		}
-
-		public void load() {
-			this.keybindProfile.load();
 		}
 
 		public Profile getKeybindProfile() {

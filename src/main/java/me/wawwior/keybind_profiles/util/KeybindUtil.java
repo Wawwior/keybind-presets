@@ -5,6 +5,8 @@ import me.wawwior.keybind_profiles.config.KeybindEntry;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.GameOptions;
 import net.minecraft.client.option.KeyBind;
+import net.minecraft.util.annotation.Debug;
+import org.slf4j.Logger;
 
 import java.util.HashMap;
 import java.util.function.Consumer;
@@ -25,6 +27,12 @@ public class KeybindUtil {
 		KeybindUtil.iterateKeybinds(keyBind -> keyBinds.put(keyBind.getTranslationKey(), new KeybindEntry(keyBind.getKeyTranslationKey(), AmecsCompat.getModifiers(keyBind))));
 	}
 
+	@Debug
+	@SuppressWarnings("unused")
+	public static void printTempKeys(Logger logger) {
+		tempKeybinds.forEach((key, value) -> logger.info(key.replaceAll("key\\.", "") + ": " + value.getKey().toString().replaceAll("key\\.", "") + " / " + value.getModifiers()));
+	}
+
 	public static void loadKeybinds(HashMap<String, KeybindEntry> keyBinds) {
 		KeybindUtil.iterateKeybinds(
 			keyBind -> {
@@ -35,10 +43,6 @@ public class KeybindUtil {
 				}
 			}
 		);
-	}
-
-	public static void updateTemporaryKeybinds(Consumer<HashMap<String, KeybindEntry>> consumer) {
-		consumer.accept(tempKeybinds);
 	}
 
 	public static void updateTemporaryKeybinds() {
