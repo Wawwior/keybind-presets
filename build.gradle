@@ -62,10 +62,10 @@ jar {
 
 modrinth {
 	token = System.getenv("MODRINTH_TOKEN")
-	projectId = "keybind_profiles"
+	projectId = 'Wfh4KfoK'
 	uploadFile = remapJar
-	gameVersions = ["1.20.1"]
-	loaders = ["quilt"]
+	gameVersions = ['1.20', '1.20.1']
+	loaders = ['quilt']
 	dependencies {
 		optional.version "amecs", "1.3.9-mc.1.20.1"
 	}

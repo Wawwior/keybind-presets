@@ -40,6 +40,7 @@ public class ProfilesScreen extends GameOptionsScreen {
 	public void init() {
 
 		profilesListWidget = this.addDrawableChild(new ProfilesListWidget(this, this.client));
+		profilesListWidget.setRenderBackground(false);
 
 		if (selectedProfile != null) {
 			profilesListWidget.setSelectedProfile(selectedProfile);
