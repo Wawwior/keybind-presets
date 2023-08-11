@@ -43,6 +43,7 @@ public class KeybindUtil {
 				}
 			}
 		);
+		KeyBind.updateBoundKeys();
 	}
 
 	public static void updateTemporaryKeybinds() {
