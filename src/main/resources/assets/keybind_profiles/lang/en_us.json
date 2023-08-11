@@ -15,6 +15,6 @@
 
   "COMMANDS": "",
 
-  "keybind_profiles.command.keybind.load.success": "Loaded keybind profile: {0}"
+  "keybind_profiles.command.keybind.load.success": "Loaded keybind profile: "
 }
 
