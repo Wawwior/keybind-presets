@@ -59,12 +59,8 @@ public class ProfilesListWidget extends AlwaysSelectedEntryListWidget<ProfilesLi
 		@Override
 		public void render(GuiGraphics graphics, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta) {
 
-			//Draw outline if hovered
 			if (hovered) {
-
-				//Outline
 				graphics.fillGradient(x - 1, y - 1, x + entryWidth - 4, y + entryHeight + 1, -0x50FFFFFF, -0x50FFFFFF);
-
 			}
 
 			if (this.keybindProfile.equals(lastLoadedProfile)) {
