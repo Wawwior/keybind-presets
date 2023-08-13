@@ -11,7 +11,7 @@ public class KeybindCommand {
 
     public static void register() {
         ClientCommandRegistrationCallback.EVENT.register((dispatcher, context0, environment) -> dispatcher.register(
-				LiteralArgumentBuilder.<QuiltClientCommandSource>literal("keybind").then(
+				LiteralArgumentBuilder.<QuiltClientCommandSource>literal("keybinds").then(
 								LiteralArgumentBuilder.<QuiltClientCommandSource>literal("load").then(
 												RequiredArgumentBuilder.<QuiltClientCommandSource, Profile>argument("profile", ProfileArgumentType.profile())
 														.executes(context -> {
