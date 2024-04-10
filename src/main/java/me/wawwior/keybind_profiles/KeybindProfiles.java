@@ -6,6 +6,7 @@ import me.wawwior.config.io.impl.JsonFileAdapter;
 import me.wawwior.keybind_profiles.command.KeybindCommand;
 import me.wawwior.keybind_profiles.compat.AmecsCompat;
 import me.wawwior.keybind_profiles.config.ProfileConfig;
+import net.minecraft.client.toast.SystemToast;
 import org.quiltmc.loader.api.ModContainer;
 import org.quiltmc.loader.api.minecraft.ClientOnly;
 import org.quiltmc.qsl.base.api.entrypoint.client.ClientModInitializer;
@@ -20,6 +21,8 @@ public class KeybindProfiles implements ClientModInitializer {
 	public static ConfigProvider<FileInfo> configProvider;
 
 	private static ProfileConfig config;
+
+	public static final SystemToast.C_ozahoshp SYSTEM_TOAST_PROFILE_TYPE = new SystemToast.C_ozahoshp();
 
 	@Override
 	public void onInitializeClient(ModContainer mod) {

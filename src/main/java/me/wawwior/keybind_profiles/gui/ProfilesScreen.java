@@ -7,7 +7,6 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ScreenArea;
 import net.minecraft.client.gui.screen.navigation.NavigationAxis;
 import net.minecraft.client.gui.screen.option.GameOptionsScreen;
-import net.minecraft.client.gui.widget.SpacerWidget;
 import net.minecraft.client.gui.widget.button.ButtonWidget;
 import net.minecraft.client.gui.widget.layout.FrameWidget;
 import net.minecraft.client.gui.widget.layout.GridWidget;
@@ -43,94 +42,89 @@ public class ProfilesScreen extends GameOptionsScreen {
 
 	public void init() {
 
-		profilesListWidget = this.addDrawableSelectableElement(new ProfilesListWidget(this, this.client));
-		profilesListWidget.setRenderBackground(false);
+		LinearLayoutWidget layoutWidget = new LinearLayoutWidget(width, height - 20, LinearLayoutWidget.Orientation.VERTICAL).setSpacing(8);
+
+		GridWidget gridWidget = new GridWidget().setRowSpacing(4);
+		GridWidget.AdditionHelper additionHelper = gridWidget.createAdditionHelper(1);
+
+		LinearLayoutWidget layoutChild0 = additionHelper.add(
+				new LinearLayoutWidget(308, 20, LinearLayoutWidget.Orientation.HORIZONTAL).setSpacing(4),
+				LayoutSettings.create().alignHorizontallyCenter()
+		);
+
+		loadButton = layoutChild0.add(this.addDrawableSelectableElement(
+			ButtonWidget.builder(Text.translatable("keybind_profiles.screen.button.load"), button -> Objects.requireNonNull(selectedProfile).load())
+				.width(100)
+				.build()
+		));
+
+		editButton = layoutChild0.add(this.addDrawableSelectableElement(
+			ButtonWidget.builder(Text.translatable("keybind_profiles.screen.button.edit"), button ->
+				Objects.requireNonNull(client).setScreen(new ProfileEditScreen(this, Objects.requireNonNull(selectedProfile)))
+			).width(100).build()
+		));
+
+		deleteButton = layoutChild0.add(this.addDrawableSelectableElement(
+			ButtonWidget.builder(Text.translatable("keybind_profiles.screen.button.delete"), button -> {
+				if (selectedProfile != null) {
+					KeybindProfiles.getConfig().deleteProfile(selectedProfile);
+					profilesListWidget.update();
+				}
+			}).width(100).build()
+		));
+
+		LinearLayoutWidget layoutChild1 = additionHelper.add(
+				new LinearLayoutWidget(308, 20, LinearLayoutWidget.Orientation.HORIZONTAL).setSpacing(4),
+				LayoutSettings.create().alignHorizontallyCenter()
+		);
+
+		layoutChild1.add(this.addDrawableSelectableElement(
+			ButtonWidget.builder(Text.translatable("keybind_profiles.screen.button.create"), button -> {
+					String name = "New Profile";
+
+					if (KeybindProfiles.getConfig().getProfile(name) != null) {
+						int i = 2;
+						while (KeybindProfiles.getConfig().getProfile(name + " #" + i) != null) {
+							i++;
+						}
+						name = name + " #" + i;
+					}
+
+					Profile profile = KeybindProfiles.getConfig().newProfile(name);
+					profile.save();
+					profilesListWidget.update();
+					profilesListWidget.setSelectedProfile(selectedProfile);
+				})
+				.width(152)
+				.build()
+		));
+
+		layoutChild1.add(this.addDrawableSelectableElement(
+			ButtonWidget.builder(CommonTexts.DONE, button -> Objects.requireNonNull(this.client).setScreen(this.parent))
+				.width(152)
+				.build()
+		));
+
+		profilesListWidget = layoutWidget.add(
+			this.addDrawableSelectableElement(new ProfilesListWidget(this, this.client)),
+			LayoutSettings.create().alignHorizontallyCenter()
+		);
+		layoutWidget.add(gridWidget, LayoutSettings.create().alignHorizontallyCenter());
+
+		gridWidget.arrangeElements();
+		layoutWidget.arrangeElements();
+
+		FrameWidget.align(layoutWidget, ScreenArea.create(NavigationAxis.HORIZONTAL, 0, 20, width, height - 20));
 
 		if (selectedProfile != null) {
 			profilesListWidget.setSelectedProfile(selectedProfile);
 		}
-
-
-		ButtonWidget doneButton = this.addDrawableSelectableElement(
-			ButtonWidget.builder(CommonTexts.DONE, button -> Objects.requireNonNull(this.client).setScreen(this.parent))
-					.width(152)
-					.build()
-		);
-
-		ButtonWidget createButton = this.addDrawableSelectableElement(
-				ButtonWidget.builder(Text.translatable("keybind_profiles.screen.button.create"), button -> {
-							String name = "New Profile";
-
-							if (KeybindProfiles.getConfig().getProfile(name) != null) {
-								int i = 2;
-								while (KeybindProfiles.getConfig().getProfile(name + " #" + i) != null) {
-									i++;
-								}
-								name = name + " #" + i;
-							}
-
-							Profile profile = KeybindProfiles.getConfig().newProfile(name);
-							profile.save();
-							profilesListWidget.update();
-							profilesListWidget.setSelectedProfile(selectedProfile);
-				})
-						.width(152)
-						.build()
-		);
-
-		deleteButton = this.addDrawableSelectableElement(
-				ButtonWidget.builder(Text.translatable("keybind_profiles.screen.button.delete"), button -> {
-					if (selectedProfile != null) {
-						KeybindProfiles.getConfig().deleteProfile(selectedProfile);
-						profilesListWidget.update();
-					}
-				})
-						.width(100)
-						.build()
-		);
-
-		editButton = this.addDrawableSelectableElement(
-			ButtonWidget.builder(Text.translatable("keybind_profiles.screen.button.edit"), button -> Objects.requireNonNull(client).setScreen(new ProfileEditScreen(this, Objects.requireNonNull(selectedProfile))))
-					.width(100)
-					.build()
-		);
-
-		loadButton = this.addDrawableSelectableElement(
-				ButtonWidget.builder(Text.translatable("keybind_profiles.screen.button.load"), button -> Objects.requireNonNull(selectedProfile).load())
-						.width(100)
-						.build()
-		);
-
-		GridWidget gridWidget = new GridWidget();
-		GridWidget.AdditionHelper additionHelper = gridWidget.createAdditionHelper(1);
-
-		LinearLayoutWidget layoutWidget0 = additionHelper.add(
-				new LinearLayoutWidget(308, 20, LinearLayoutWidget.Orientation.HORIZONTAL),
-				LayoutSettings.create().alignHorizontallyCenter()
-		);
-		layoutWidget0.add(loadButton);
-		layoutWidget0.add(editButton);
-		layoutWidget0.add(deleteButton);
-
-		additionHelper.add(SpacerWidget.withHeight(4));
-
-		LinearLayoutWidget layoutWidget1 = additionHelper.add(
-				new LinearLayoutWidget(308, 20, LinearLayoutWidget.Orientation.HORIZONTAL),
-				LayoutSettings.create().alignHorizontallyCenter()
-		);
-
-		layoutWidget1.add(createButton);
-		layoutWidget1.add(doneButton);
-
-		gridWidget.arrangeElements();
-		FrameWidget.align(gridWidget, ScreenArea.create(NavigationAxis.HORIZONTAL, 0, this.height - 64, this.width, 64));
-
 	}
 
 	@Override
 	public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
 
-		this.renderBackground(graphics, mouseX, mouseY, delta);
+		super.render(graphics, mouseX, mouseY, delta);
 		graphics.drawCenteredShadowedText(this.textRenderer, this.title, this.width / 2, 8, 16777215);
 
 		selectedProfile = Optional.ofNullable(profilesListWidget.getSelectedOrNull()).map(ProfilesListWidget.ProfileListEntry::getKeybindProfile).orElse(null);
@@ -140,7 +134,5 @@ public class ProfilesScreen extends GameOptionsScreen {
 		deleteButton.active = hasSelection;
 		editButton.active = hasSelection;
 		loadButton.active = hasSelection;
-
-		super.render(graphics, mouseX, mouseY, delta);
 	}
 }

@@ -18,10 +18,8 @@ public class ProfilesListWidget extends AlwaysSelectedEntryListWidget<ProfilesLi
 
 	final ProfilesScreen parent;
 
-	private Profile lastLoadedProfile;
-
-	public ProfilesListWidget(ProfilesScreen parent, MinecraftClient client) {
-		super(client, parent.width, parent.height, 64, 20);
+    public ProfilesListWidget(ProfilesScreen parent, MinecraftClient client) {
+		super(client, parent.width, parent.height - 84, 20, 20);
 		this.parent = parent;
 		update();
 	}
@@ -63,19 +61,14 @@ public class ProfilesListWidget extends AlwaysSelectedEntryListWidget<ProfilesLi
 				graphics.fillGradient(x - 1, y - 1, x + entryWidth - 4, y + entryHeight + 1, -0x50FFFFFF, -0x50FFFFFF);
 			}
 
-			if (this.keybindProfile.equals(lastLoadedProfile)) {
-				graphics.drawCenteredShadowedText(ProfilesListWidget.this.client.textRenderer, keybindProfile.getName(), ProfilesListWidget.this.width / 2, y + 3, 16777045);
-			} else {
-				graphics.drawCenteredShadowedText(ProfilesListWidget.this.client.textRenderer, keybindProfile.getName(), ProfilesListWidget.this.width / 2, y + 3, 16777215);
-			}
+			graphics.drawCenteredShadowedText(ProfilesListWidget.this.client.textRenderer, keybindProfile.getName(), ProfilesListWidget.this.width / 2, y + 3, 16777215);
 		}
 
 		@Override
 		public boolean mouseClicked(double mouseX, double mouseY, int button) {
 			ProfilesListWidget.this.setSelected(this);
 			if (Util.getMeasuringTimeMs() - this.time < 250L) {
-				lastLoadedProfile = keybindProfile;
-				client.getSoundManager().play(PositionedSoundInstance.create(SoundEvents.UI_BUTTON_CLICK, 1.0F));
+                client.getSoundManager().play(PositionedSoundInstance.create(SoundEvents.UI_BUTTON_CLICK, 1.0F));
 				this.keybindProfile.load();
 			}
 			this.time = Util.getMeasuringTimeMs();
