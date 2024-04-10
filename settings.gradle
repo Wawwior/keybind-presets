@@ -12,3 +12,8 @@ pluginManagement {
 		gradlePluginPortal()
 	}
 }
+sourceControl {
+	gitRepository("https://github.com/Wawwior/Config.git") {
+		producesModule("me.wawwior:config")
+	}
+}
