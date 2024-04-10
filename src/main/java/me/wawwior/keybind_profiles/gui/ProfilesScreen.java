@@ -3,12 +3,16 @@ package me.wawwior.keybind_profiles.gui;
 import me.wawwior.keybind_profiles.KeybindProfiles;
 import me.wawwior.keybind_profiles.config.Profile;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.screen.NavigationAxis;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ScreenArea;
+import net.minecraft.client.gui.screen.navigation.NavigationAxis;
 import net.minecraft.client.gui.screen.option.GameOptionsScreen;
-import net.minecraft.client.gui.widget.*;
-import net.minecraft.client.gui.widget.container.LayoutSettings;
+import net.minecraft.client.gui.widget.SpacerWidget;
+import net.minecraft.client.gui.widget.button.ButtonWidget;
+import net.minecraft.client.gui.widget.layout.FrameWidget;
+import net.minecraft.client.gui.widget.layout.GridWidget;
+import net.minecraft.client.gui.widget.layout.LayoutSettings;
+import net.minecraft.client.gui.widget.layout.LinearLayoutWidget;
 import net.minecraft.client.option.GameOptions;
 import net.minecraft.text.CommonTexts;
 import net.minecraft.text.Text;
@@ -39,7 +43,7 @@ public class ProfilesScreen extends GameOptionsScreen {
 
 	public void init() {
 
-		profilesListWidget = this.addDrawableChild(new ProfilesListWidget(this, this.client));
+		profilesListWidget = this.addDrawableSelectableElement(new ProfilesListWidget(this, this.client));
 		profilesListWidget.setRenderBackground(false);
 
 		if (selectedProfile != null) {
@@ -47,13 +51,13 @@ public class ProfilesScreen extends GameOptionsScreen {
 		}
 
 
-		ButtonWidget doneButton = this.addDrawableChild(
+		ButtonWidget doneButton = this.addDrawableSelectableElement(
 			ButtonWidget.builder(CommonTexts.DONE, button -> Objects.requireNonNull(this.client).setScreen(this.parent))
 					.width(152)
 					.build()
 		);
 
-		ButtonWidget createButton = this.addDrawableChild(
+		ButtonWidget createButton = this.addDrawableSelectableElement(
 				ButtonWidget.builder(Text.translatable("keybind_profiles.screen.button.create"), button -> {
 							String name = "New Profile";
 
@@ -74,7 +78,7 @@ public class ProfilesScreen extends GameOptionsScreen {
 						.build()
 		);
 
-		deleteButton = this.addDrawableChild(
+		deleteButton = this.addDrawableSelectableElement(
 				ButtonWidget.builder(Text.translatable("keybind_profiles.screen.button.delete"), button -> {
 					if (selectedProfile != null) {
 						KeybindProfiles.getConfig().deleteProfile(selectedProfile);
@@ -85,13 +89,13 @@ public class ProfilesScreen extends GameOptionsScreen {
 						.build()
 		);
 
-		editButton = this.addDrawableChild(
+		editButton = this.addDrawableSelectableElement(
 			ButtonWidget.builder(Text.translatable("keybind_profiles.screen.button.edit"), button -> Objects.requireNonNull(client).setScreen(new ProfileEditScreen(this, Objects.requireNonNull(selectedProfile))))
 					.width(100)
 					.build()
 		);
 
-		loadButton = this.addDrawableChild(
+		loadButton = this.addDrawableSelectableElement(
 				ButtonWidget.builder(Text.translatable("keybind_profiles.screen.button.load"), button -> Objects.requireNonNull(selectedProfile).load())
 						.width(100)
 						.build()
@@ -104,9 +108,9 @@ public class ProfilesScreen extends GameOptionsScreen {
 				new LinearLayoutWidget(308, 20, LinearLayoutWidget.Orientation.HORIZONTAL),
 				LayoutSettings.create().alignHorizontallyCenter()
 		);
-		layoutWidget0.addChild(loadButton);
-		layoutWidget0.addChild(editButton);
-		layoutWidget0.addChild(deleteButton);
+		layoutWidget0.add(loadButton);
+		layoutWidget0.add(editButton);
+		layoutWidget0.add(deleteButton);
 
 		additionHelper.add(SpacerWidget.withHeight(4));
 
@@ -115,8 +119,8 @@ public class ProfilesScreen extends GameOptionsScreen {
 				LayoutSettings.create().alignHorizontallyCenter()
 		);
 
-		layoutWidget1.addChild(createButton);
-		layoutWidget1.addChild(doneButton);
+		layoutWidget1.add(createButton);
+		layoutWidget1.add(doneButton);
 
 		gridWidget.arrangeElements();
 		FrameWidget.align(gridWidget, ScreenArea.create(NavigationAxis.HORIZONTAL, 0, this.height - 64, this.width, 64));
@@ -126,7 +130,7 @@ public class ProfilesScreen extends GameOptionsScreen {
 	@Override
 	public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
 
-		this.renderBackground(graphics);
+		this.renderBackground(graphics, mouseX, mouseY, delta);
 		graphics.drawCenteredShadowedText(this.textRenderer, this.title, this.width / 2, 8, 16777215);
 
 		selectedProfile = Optional.ofNullable(profilesListWidget.getSelectedOrNull()).map(ProfilesListWidget.ProfileListEntry::getKeybindProfile).orElse(null);

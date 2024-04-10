@@ -3,13 +3,18 @@ package me.wawwior.keybind_profiles.gui;
 import me.wawwior.keybind_profiles.KeybindProfiles;
 import me.wawwior.keybind_profiles.config.Profile;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.screen.NavigationAxis;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ScreenArea;
+import net.minecraft.client.gui.screen.navigation.NavigationAxis;
 import net.minecraft.client.gui.tooltip.FocusedTooltipPositioner;
 import net.minecraft.client.gui.tooltip.Tooltip;
-import net.minecraft.client.gui.widget.*;
-import net.minecraft.client.gui.widget.container.LayoutSettings;
+import net.minecraft.client.gui.widget.SpacerWidget;
+import net.minecraft.client.gui.widget.TextFieldWidget;
+import net.minecraft.client.gui.widget.button.ButtonWidget;
+import net.minecraft.client.gui.widget.layout.FrameWidget;
+import net.minecraft.client.gui.widget.layout.GridWidget;
+import net.minecraft.client.gui.widget.layout.LayoutSettings;
+import net.minecraft.client.gui.widget.layout.LinearLayoutWidget;
 import net.minecraft.text.CommonTexts;
 import net.minecraft.text.Text;
 
@@ -32,7 +37,7 @@ public class ProfileEditScreen extends Screen {
 	@Override
 	protected void init() {
 
-		nameField = this.addDrawableChild(
+		nameField = this.addDrawableSelectableElement(
 				new TextFieldWidget(textRenderer, 0, 0, 200, 20, Text.of(""))
 		);
 
@@ -40,13 +45,13 @@ public class ProfileEditScreen extends Screen {
 		nameField.setTooltip(Tooltip.create(Text.translatable("keybind_profiles.screen.tooltip.name")));
 		nameField.setTooltipDelay(500);
 
-		doneButton = this.addDrawableChild(
+		doneButton = this.addDrawableSelectableElement(
 				ButtonWidget.builder(CommonTexts.DONE, button -> closeScreen())
 						.width(100)
 						.build()
 		);
 
-		moreButton = this.addDrawableChild(
+		moreButton = this.addDrawableSelectableElement(
 				ButtonWidget.builder(Text.translatable("keybind_profiles.screen.button.more"), button -> GuiUtil.openKeybindScreen(profile, this))
 						.width(100)
 						.build()
@@ -59,7 +64,7 @@ public class ProfileEditScreen extends Screen {
 				new LinearLayoutWidget(200, 20, LinearLayoutWidget.Orientation.HORIZONTAL),
 				LayoutSettings.create().alignVerticallyCenter().alignHorizontallyCenter()
 		);
-		layoutWidget0.addChild(nameField);
+		layoutWidget0.add(nameField);
 
 		additionHelper.add(SpacerWidget.withHeight(8));
 
@@ -67,8 +72,8 @@ public class ProfileEditScreen extends Screen {
 				new LinearLayoutWidget(204, 20, LinearLayoutWidget.Orientation.HORIZONTAL),
 				LayoutSettings.create().alignVerticallyCenter().alignHorizontallyCenter()
 		);
-		layoutWidget2.addChild(moreButton);
-		layoutWidget2.addChild(doneButton);
+		layoutWidget2.add(moreButton);
+		layoutWidget2.add(doneButton);
 
 
 		gridWidget.arrangeElements();
@@ -79,7 +84,7 @@ public class ProfileEditScreen extends Screen {
 	@Override
 	public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
 
-		renderBackground(graphics);
+		renderBackground(graphics, mouseX, mouseY, delta);
 		graphics.drawCenteredShadowedText(textRenderer, title, width / 2, 8, 16777215);
 
 		super.render(graphics, mouseX, mouseY, delta);
@@ -93,9 +98,9 @@ public class ProfileEditScreen extends Screen {
 		) {
 			nameField.setEditableColor(16733525);
 			if (!nameField.getText().trim().isEmpty()) {
-				setDeferredTooltip(Tooltip.create(Text.translatable("keybind_profiles.screen.tooltip.name_taken")), new FocusedTooltipPositioner(nameField), true);
+				setDeferredTooltip(Tooltip.create(Text.translatable("keybind_profiles.screen.tooltip.name_taken")), new FocusedTooltipPositioner(nameField.getArea()), true);
 			} else {
-				setDeferredTooltip(Tooltip.create(Text.translatable("keybind_profiles.screen.tooltip.name_empty")), new FocusedTooltipPositioner(nameField), true);
+				setDeferredTooltip(Tooltip.create(Text.translatable("keybind_profiles.screen.tooltip.name_empty")), new FocusedTooltipPositioner(nameField.getArea()), true);
 			}
 			doneButton.active = false;
 			moreButton.active = false;

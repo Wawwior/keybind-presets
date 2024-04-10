@@ -4,7 +4,7 @@ import me.wawwior.keybind_profiles.KeybindProfiles;
 import me.wawwior.keybind_profiles.config.Profile;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.widget.AlwaysSelectedEntryListWidget;
+import net.minecraft.client.gui.widget.list.AlwaysSelectedEntryListWidget;
 import net.minecraft.client.sound.PositionedSoundInstance;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
@@ -21,7 +21,7 @@ public class ProfilesListWidget extends AlwaysSelectedEntryListWidget<ProfilesLi
 	private Profile lastLoadedProfile;
 
 	public ProfilesListWidget(ProfilesScreen parent, MinecraftClient client) {
-		super(client, parent.width, parent.height, 20, parent.height - 64, 20);
+		super(client, parent.width, parent.height, 64, 20);
 		this.parent = parent;
 		update();
 	}
